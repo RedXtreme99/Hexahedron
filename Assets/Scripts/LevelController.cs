@@ -11,7 +11,7 @@ public class LevelController : MonoBehaviour
     // Accessible level traits
     [HideInInspector]
     public Light _levelLight;
-    public static bool _paused;
+    public bool _paused;
 
     void Awake()
     {

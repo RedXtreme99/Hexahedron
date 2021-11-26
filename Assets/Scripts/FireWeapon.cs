@@ -5,10 +5,14 @@ using UnityEngine;
 public class FireWeapon : MonoBehaviour
 {
     // Inspector fields to control raycast parameters
+    [Header("Mechanics")]
     [SerializeField] float _rayDistance = 50.0f;
     [SerializeField] LayerMask _enemyLayer;
     [SerializeField] Transform _shadowCastSpawn;
     [SerializeField] LayerMask _geometryLayer;
+
+    [Header("Components")]
+    [SerializeField] Texture2D _crosshair;
 
     // Class variables
     RaycastHit _hitInfo;        // raycast hit info to capture from raycasts
@@ -19,6 +23,17 @@ public class FireWeapon : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             Shoot();
+        }
+    }
+
+    void OnGUI()
+    {
+        float xMin = Screen.width / 2 - _crosshair.width / 2;
+        float yMin = Screen.height / 2 - _crosshair.height / 2;
+        if(!LevelController.Instance._paused)
+        {
+            GUI.DrawTexture(new Rect(xMin, yMin, _crosshair.width,
+                _crosshair.height), _crosshair);
         }
     }
 
@@ -33,7 +48,14 @@ public class FireWeapon : MonoBehaviour
         if(Physics.Raycast(center.position, center.forward, out _hitInfo,
             _rayDistance, _enemyLayer))
         {
-
+            if(_hitInfo.transform.tag == "Enemy")
+            {
+                Enemy enemy = _hitInfo.transform.GetComponent<Enemy>();
+                if(enemy != null)
+                {
+                    enemy.Kill(standingInShadow);
+                }
+            }
         }
     }
 
