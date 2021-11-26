@@ -24,9 +24,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Check if grounded this frame using Physics sphere cast
-        _grounded = Physics.CheckSphere(_groundCheck.position, _groundDistance,
-            _groundMask);
+        // Check if grounded this frame using Physics raycast downwards
+        _grounded = Physics.Raycast(_groundCheck.position, Vector3.down,
+            .5f, _groundMask);
         // Capture keyboard input on shift, sprinting if held down this frame
         _sprinting = Input.GetKey(KeyCode.LeftShift);
 
