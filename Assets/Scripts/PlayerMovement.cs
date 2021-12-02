@@ -6,8 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     // Inspector fields
     [Header("Mechanics")]
-    [SerializeField] float _moveSpeed = 12.0f;     // Move speed in x and z
-    [SerializeField] float _sprintMultiplier = 2.0f;  
+    [SerializeField] float _moveSpeed = 6.0f;     // Move speed in x and z
+    [SerializeField] float _sprintMultiplier = 1.333f;  
     [SerializeField] float _jumpHeight = 3.0f;
     [SerializeField] float _gravity = -19.62f;     // Simulated gravity at 2*g
     [SerializeField] float _groundDistance = 0.4f; // Sphere cast radius
