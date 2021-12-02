@@ -19,8 +19,7 @@ public class Enemy : MonoBehaviour
     {
         if(_dropsMotes)
         {
-            // Drop motes
-            Debug.Log("Mote drop " + shadow.ToString());
+            DropMotes(shadow);
         }
         Destroy(gameObject);
     }
@@ -28,5 +27,11 @@ public class Enemy : MonoBehaviour
     public void SetMoteDrops(bool drops)
     {
         _dropsMotes = drops;
+    }
+
+    void DropMotes(bool shadow)
+    {
+        // Drop motes
+        Debug.Log("Mote drop " + shadow.ToString());
     }
 }
