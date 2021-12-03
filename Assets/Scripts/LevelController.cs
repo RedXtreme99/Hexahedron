@@ -120,12 +120,20 @@ public class LevelController : MonoBehaviour
 
     void ActivateFountains()
     {
-
+        Fountain[] fountains = _faces[(int)_currentFloor].GetComponentsInChildren<Fountain>();
+        foreach(Fountain fountain in fountains)
+        {
+            fountain.SetActive(true);
+        }
     }
 
     void DeactivateFountains()
     {
-
+        Fountain[] fountains = _faces[(int)_currentFloor].GetComponentsInChildren<Fountain>();
+        foreach(Fountain fountain in fountains)
+        {
+            fountain.SetActive(false);
+        }
     }
 
     public void SetRotation(Rotation rotation)
@@ -144,5 +152,6 @@ public class LevelController : MonoBehaviour
     public void ReachedTarget()
     {
         _progress++;
+        ActivateFountains();
     }
 }

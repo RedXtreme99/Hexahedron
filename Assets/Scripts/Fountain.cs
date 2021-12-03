@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Fountain : MonoBehaviour
 {
+    // Components
+    [SerializeField] Material _lightMaterial;
+    [SerializeField] Material _darkMaterial;
+
     // Class variables
     bool _dark;
     bool _active;
@@ -20,6 +24,15 @@ public class Fountain : MonoBehaviour
         _active = active;
         if(active)
         {
+            int randInt = Random.Range(0, 2);
+            if(randInt == 0)
+            {
+                SetDark(true);
+            }
+            else
+            {
+                SetDark(false);
+            }
             _renderer.enabled = true;
             if(tag == "Front")
             {
@@ -41,6 +54,19 @@ public class Fountain : MonoBehaviour
         else
         {
             _renderer.enabled = false;
+        }
+    }
+
+    void SetDark(bool dark)
+    {
+        _dark = dark;
+        if(dark)
+        {
+            _renderer.material = _darkMaterial;
+        }
+        else
+        {
+            _renderer.material = _lightMaterial;
         }
     }
 
