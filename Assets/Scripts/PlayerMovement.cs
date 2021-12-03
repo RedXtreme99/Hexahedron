@@ -37,31 +37,38 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Capture keyboard input on wasd & up/down/left/right
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        // Create movement vector
-        Vector3 move = transform.right * x + transform.forward * z;
-        // If sprinting, apply sprint to forward velocity
-        if(_sprinting && move.z > 0)
+        if(!LevelController.Instance._transitioning)
         {
-            move.z *= _sprintMultiplier;
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            // Create movement vector
+            Vector3 move = transform.right * x + transform.forward * z;
+            // If sprinting, apply sprint to forward velocity
+            if(_sprinting && move.z > 0)
+            {
+                move.z *= _sprintMultiplier;
+            }
+
+            // Apply input movement to character controller
+            _charController.Move(_moveSpeed * Time.deltaTime * move);
+
+            // Capture keyboard input on spacebar
+            // Apply jump to y velocity
+            if(Input.GetButtonDown("Jump") && _grounded)
+            {
+                _velocity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
+            }
+
+            // Apply gravity
+            _velocity.y += _gravity * Time.deltaTime;
+
+            // Apply physics force movement to character controller
+            _charController.Move(_velocity * Time.deltaTime);
         }
-
-        // Apply input movement to character controller
-        _charController.Move(_moveSpeed * Time.deltaTime * move);
-
-        // Capture keyboard input on spacebar
-        // Apply jump to y velocity
-        if(Input.GetButtonDown("Jump") && _grounded)
+        else
         {
-            _velocity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
+            _charController.Move(_moveSpeed * Time.deltaTime * Vector3.up);
         }
-
-        // Apply gravity
-        _velocity.y += _gravity * Time.deltaTime;
-
-        // Apply physics force movement to character controller
-        _charController.Move(_velocity * Time.deltaTime);
     }
 }

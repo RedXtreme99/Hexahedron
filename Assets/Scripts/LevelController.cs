@@ -13,12 +13,15 @@ public class LevelController : MonoBehaviour
     [SerializeField] GameObject[] _faces;
     [SerializeField] GameObject _target;
     [SerializeField] Transform[] _targetPoints;
+    [SerializeField] FlashImage _flashImage;
 
     // Accessible level traits
     [HideInInspector]
     public Light _levelLight;
     [HideInInspector]
     public bool _paused;
+    [HideInInspector]
+    public bool _transitioning;
 
     // Class variables
     public Floor _currentFloor = Floor.Bottom;
@@ -162,16 +165,24 @@ public class LevelController : MonoBehaviour
         DeactivateFountains();
         _nextRotation = rotation;
         _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(true);
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        foreach(Enemy enemy in enemies)
+        {
+            enemy.KillNoMotes();
+        }
     }
 
     public void StartRotation()
     {
-        Debug.Log("Starting coroutine");
+        _transitioning = true;
         StartCoroutine(RotateRoom());
+        _transitioning = false;
     }
 
     IEnumerator RotateRoom()
     {
+        yield return new WaitForSeconds(2);
+        _flashImage.StartFlash(1, 1, Color.white);
         _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(false);
         Quaternion startingRotation = _cubeRoom.transform.rotation;
         Vector3 targetRotation = Vector3.zero;
@@ -197,6 +208,7 @@ public class LevelController : MonoBehaviour
             Debug.Log("Error determining rotation");
         }
         SetNewFloor();
+        _nextRotation = Rotation.None;
         while(elapsedTime < 1f)
         {
             elapsedTime += Time.deltaTime;
@@ -208,131 +220,128 @@ public class LevelController : MonoBehaviour
 
     void SetNewFloor()
     {
-        switch(_currentFloor)
+        if(_nextRotation != Rotation.None)
         {
-            case Floor.Bottom:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Front;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Left;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Right;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Back;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from bottom floor");
-                        break;
-                }
-                break;
-            case Floor.Right:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Front;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Bottom;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Top;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Back;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from right floor");
-                        break;
-                }
-                break;
-            case Floor.Front:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Top;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Left;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Right;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Bottom;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from front floor");
-                        break;
-                }
-                break;
-            case Floor.Left:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Front;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Top;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Bottom;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Back;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from right floor");
-                        break;
-                }
-                break;
-            case Floor.Back:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Bottom;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Left;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Right;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Top;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from right floor");
-                        break;
-                }
-                break;
-            case Floor.Top:
-                switch(_nextRotation)
-                {
-                    case Rotation.Forward:
-                        _currentFloor = Floor.Back;
-                        break;
-                    case Rotation.Counterclockwise:
-                        _currentFloor = Floor.Left;
-                        break;
-                    case Rotation.Clockwise:
-                        _currentFloor = Floor.Right;
-                        break;
-                    case Rotation.Backward:
-                        _currentFloor = Floor.Front;
-                        break;
-                    default:
-                        Debug.Log("Error rotating from right floor");
-                        break;
-                }
-                break;
-            default:
-                Debug.Log("Error setting floor");
-                break;
+            switch(_currentFloor)
+            {
+                case Floor.Bottom:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Front;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Left;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Right;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Back;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from bottom floor");
+                            return;
+                    }
+                case Floor.Right:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Front;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Bottom;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Top;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Back;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from right floor");
+                            return;
+                    }
+                case Floor.Front:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Top;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Left;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Right;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Bottom;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from front floor");
+                            return;
+                    }
+                case Floor.Left:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Front;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Top;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Bottom;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Back;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from right floor");
+                            return;
+                    }
+                case Floor.Back:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Bottom;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Left;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Right;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Top;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from right floor");
+                            return;
+                    }
+                case Floor.Top:
+                    switch(_nextRotation)
+                    {
+                        case Rotation.Forward:
+                            _currentFloor = Floor.Back;
+                            return;
+                        case Rotation.Counterclockwise:
+                            _currentFloor = Floor.Left;
+                            return;
+                        case Rotation.Clockwise:
+                            _currentFloor = Floor.Right;
+                            return;
+                        case Rotation.Backward:
+                            _currentFloor = Floor.Front;
+                            return;
+                        default:
+                            Debug.Log("Error rotating from right floor");
+                            return;
+                    }
+                default:
+                    Debug.Log("Error setting floor");
+                    return;
+            }
         }
     }
 }

@@ -16587,8 +16587,10 @@ MonoBehaviour:
   - {fileID: 727692370}
   - {fileID: 225998774}
   - {fileID: 1018261360}
+  _flashImage: {fileID: 1616303368}
   _levelLight: {fileID: 1141695826}
   _paused: 0
+  _transitioning: 0
   _currentFloor: 0
 --- !u!4 &2094672682
 Transform:

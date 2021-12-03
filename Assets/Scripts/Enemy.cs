@@ -40,4 +40,9 @@ public class Enemy : MonoBehaviour
             rb.AddForce(new Vector3(randomX, 8f, randomZ));
         }
     }
+
+    public void KillNoMotes()
+    {
+        Destroy(gameObject);
+    }
 }

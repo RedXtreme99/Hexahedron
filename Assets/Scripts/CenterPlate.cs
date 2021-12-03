@@ -20,6 +20,7 @@ public class CenterPlate : MonoBehaviour
             if(_active)
             {
                 LevelController.Instance.StartRotation();
+                _active = false;
             }
         }
     }
