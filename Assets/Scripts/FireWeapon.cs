@@ -13,6 +13,7 @@ public class FireWeapon : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] Texture2D _crosshair;
+    [SerializeField] AudioClip _shootSound;
 
     // Class variables
     RaycastHit _hitInfo;        // raycast hit info to capture from raycasts
@@ -45,7 +46,7 @@ public class FireWeapon : MonoBehaviour
 
         // Perform shoot raycast from center of screen
         Transform center = Camera.main.transform;
-        if(standingInShadow) Debug.Log("SHADOW"); else Debug.Log("LIGHT");
+        AudioManager.Instance.PlaySound(_shootSound);
         if(Physics.Raycast(center.position, center.forward, out _hitInfo,
             _rayDistance, _enemyLayer))
         {

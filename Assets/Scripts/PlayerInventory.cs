@@ -13,6 +13,8 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] FireWeapon _weapon;
     [SerializeField] GameObject _Mote;
     [SerializeField] Transform _fullMotePoint;
+    [SerializeField] AudioClip _motePickupSound;
+    [SerializeField] AudioClip _cleanseSound;
 
     // UI Components
     [SerializeField] Text _moteText;
@@ -65,6 +67,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if(!_fullMotes)
         {
+            AudioManager.Instance.PlaySound(_motePickupSound);
             _holdingMotes = true;
             _moteTimer = 29.9f;
             if(shadow == _shadow)
@@ -110,7 +113,7 @@ public class PlayerInventory : MonoBehaviour
     void PerformCleanse()
     {
         string darkString = _shadow ? "dark" : "light";
-        Debug.Log("CLEANSE " + darkString);
+        AudioManager.Instance.PlaySound(_cleanseSound);
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _fountainLayer);
         foreach(Collider collider in colliders)
         {

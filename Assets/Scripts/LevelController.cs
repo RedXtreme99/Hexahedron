@@ -18,6 +18,9 @@ public class LevelController : MonoBehaviour
     [SerializeField] FlashImage _flashImage;
     [SerializeField] GameObject _player;
     [SerializeField] Text _winText;
+    [SerializeField] AudioClip _winSound;
+    [SerializeField] AudioClip _targetSound;
+    [SerializeField] AudioClip _teleportSound;
 
     // Accessible level traits
     [HideInInspector]
@@ -135,6 +138,7 @@ public class LevelController : MonoBehaviour
     {
         _progress++;
         Debug.Log("Current progress: " + _progress.ToString());
+        AudioManager.Instance.PlaySound(_targetSound);
         if(_progress < 6)
         {
             int randInt = Random.Range(0, 5);
@@ -148,7 +152,8 @@ public class LevelController : MonoBehaviour
         else
         {
             _flashImage.StartFlash(2f, .8f, Color.green);
-            _winText.enabled = true;
+            AudioManager.Instance.PlaySound(_winSound);
+            _winText.text = "You win!";
         }
     }
 
@@ -200,6 +205,7 @@ public class LevelController : MonoBehaviour
         _flashImage.StartFlash(1, 1, Color.white);
         _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(false);
         Quaternion startingRotation = _cubeRoom.transform.rotation;
+        AudioManager.Instance.PlaySound(_teleportSound);
         Vector3 targetRotation = Vector3.zero;
         float elapsedTime = 0f;
         if(_nextRotation == Rotation.Forward)
@@ -317,7 +323,7 @@ public class LevelController : MonoBehaviour
                             _currentFloor = Floor.Back;
                             return;
                         default:
-                            Debug.Log("Error rotating from right floor");
+                            Debug.Log("Error rotating from left floor");
                             return;
                     }
                 case Floor.Back:
@@ -336,7 +342,7 @@ public class LevelController : MonoBehaviour
                             _currentFloor = Floor.Top;
                             return;
                         default:
-                            Debug.Log("Error rotating from right floor");
+                            Debug.Log("Error rotating from back floor");
                             return;
                     }
                 case Floor.Top:
@@ -355,7 +361,7 @@ public class LevelController : MonoBehaviour
                             _currentFloor = Floor.Front;
                             return;
                         default:
-                            Debug.Log("Error rotating from right floor");
+                            Debug.Log("Error rotating from top floor");
                             return;
                     }
                 default:

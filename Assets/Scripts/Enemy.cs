@@ -5,8 +5,15 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] GameObject _Mote;
+    [SerializeField] AudioClip _spawnSound;
+    [SerializeField] AudioClip _deathSound;
 
     bool _dropsMotes = false;
+
+    void Awake()
+    {
+        AudioManager.Instance.PlaySound(_spawnSound);
+    }
 
     public void Kill(bool shadow)
     {
@@ -14,6 +21,7 @@ public class Enemy : MonoBehaviour
         {
             DropMotes(shadow);
         }
+        AudioManager.Instance.PlaySound(_deathSound);
         Destroy(gameObject);
     }
 
