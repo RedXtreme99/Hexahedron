@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Front
+  - Back
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX
@@ -18,7 +22,7 @@ TagManager:
   - Ground
   - Shadow
   - Enemy
-  - 
+  - Foutain
   - 
   - 
   - 

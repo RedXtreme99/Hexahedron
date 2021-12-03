@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
+    // Inspector fields
+    [SerializeField] LayerMask _fountainLayer;
+
     // Components
     [SerializeField] MouseLook _persp;
     [SerializeField] FireWeapon _weapon;
@@ -108,6 +111,11 @@ public class PlayerInventory : MonoBehaviour
     {
         string darkString = _shadow ? "dark" : "light";
         Debug.Log("CLEANSE " + darkString);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _fountainLayer);
+        foreach(Collider collider in colliders)
+        {
+            collider.GetComponent<Fountain>().Cleanse(_shadow);
+        }
         RemoveMotes();
     }
 

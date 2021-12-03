@@ -8,10 +8,24 @@ public class LevelController : MonoBehaviour
     // Instance of this script for singleton pattern
     public static LevelController Instance = null;
 
+    // Components
+    [SerializeField] GameObject _cubeRoom;
+    [SerializeField] GameObject[] _faces;
+
     // Accessible level traits
     [HideInInspector]
     public Light _levelLight;
+    [HideInInspector]
     public bool _paused;
+
+    // Class variables
+    Floor _currentFloor = Floor.Bottom;
+    Rotation _nextRotation = Rotation.None;
+    int _progress = 0;
+
+    // Enums for game state and rotations
+    public enum Floor { Bottom, Right, Front, Left, Back, Top };
+    public enum Rotation { None, Clockwise, Forward, Counterclockwise, Backward };
 
     void Awake()
     {
@@ -102,5 +116,33 @@ public class LevelController : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
         Application.Quit();
+    }
+
+    void ActivateFountains()
+    {
+
+    }
+
+    void DeactivateFountains()
+    {
+
+    }
+
+    public void SetRotation(Rotation rotation)
+    {
+        DeactivateFountains();
+        _nextRotation = rotation;
+        _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(true);
+    }
+
+    public void RotateRoom()
+    {
+        Debug.Log(_nextRotation.ToString());
+        _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(false);
+    }
+
+    public void ReachedTarget()
+    {
+        _progress++;
     }
 }

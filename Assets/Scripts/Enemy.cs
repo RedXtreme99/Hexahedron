@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] GameObject _Mote;
+
     bool _dropsMotes = false;
 
     private void Awake()
     {
-        float random = Random.Range(0, 2);
-        if(random == 1)
-        {
-            _dropsMotes = true;
-        }
+        _dropsMotes = true;
     }
 
     public void Kill(bool shadow)
@@ -31,7 +29,15 @@ public class Enemy : MonoBehaviour
 
     void DropMotes(bool shadow)
     {
-        // Drop motes
-        Debug.Log("Mote drop " + shadow.ToString());
+        for(int i = 0; i < 3; i++)
+        {
+            GameObject mote = Instantiate(_Mote,
+                transform.position + i / 2 * Vector3.up, Quaternion.identity);
+            mote.GetComponent<Mote>().SetDark(shadow);
+            Rigidbody rb = mote.AddComponent<Rigidbody>();
+            float randomX = Random.Range(-1f, 1f);
+            float randomZ = Random.Range(-1f, 1f);
+            rb.AddForce(new Vector3(randomX, 8f, randomZ));
+        }
     }
 }
