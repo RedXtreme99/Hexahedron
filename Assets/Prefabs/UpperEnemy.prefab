@@ -48,6 +48,8 @@ MonoBehaviour:
   _Mote: {fileID: 6882649717916438830, guid: 6ff4fdf38495845c8ae4dae6c075c41f, type: 3}
   _spawnSound: {fileID: 8300000, guid: 02134fccff3794e1bbd6df09d4fdc627, type: 3}
   _deathSound: {fileID: 8300000, guid: 5f5fa06625e3846d48592d38e504cc65, type: 3}
+  _particles: {fileID: 2057921785495206348, guid: 03e8729e55e4142f59b3845dba6ca96a,
+    type: 3}
 --- !u!65 &7177061351586124761
 BoxCollider:
   m_ObjectHideFlags: 0

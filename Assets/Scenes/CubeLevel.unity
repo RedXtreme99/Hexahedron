@@ -3984,6 +3984,8 @@ MonoBehaviour:
   _fullMotePoint: {fileID: 2052432270}
   _motePickupSound: {fileID: 8300000, guid: 0ea4dd43ed6ae4cf98cb4633a344acbc, type: 3}
   _cleanseSound: {fileID: 8300000, guid: 253b1b4c1758b44e4a39a9ad4f3e673e, type: 3}
+  _particles: {fileID: 2057921785495206348, guid: 03e8729e55e4142f59b3845dba6ca96a,
+    type: 3}
   _moteText: {fileID: 1912876138}
   _fullMotes: 0
 --- !u!1 &580815817

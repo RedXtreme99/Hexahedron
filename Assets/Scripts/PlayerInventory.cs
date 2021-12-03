@@ -15,6 +15,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] Transform _fullMotePoint;
     [SerializeField] AudioClip _motePickupSound;
     [SerializeField] AudioClip _cleanseSound;
+    [SerializeField] ParticleSystem _particles;
 
     // UI Components
     [SerializeField] Text _moteText;
@@ -28,12 +29,6 @@ public class PlayerInventory : MonoBehaviour
     [HideInInspector]
     public bool _fullMotes = false;
     GameObject _fullIndicator;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()
@@ -112,8 +107,8 @@ public class PlayerInventory : MonoBehaviour
 
     void PerformCleanse()
     {
-        string darkString = _shadow ? "dark" : "light";
         AudioManager.Instance.PlaySound(_cleanseSound);
+        _particles.Play();
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _fountainLayer);
         foreach(Collider collider in colliders)
         {

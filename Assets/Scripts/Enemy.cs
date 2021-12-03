@@ -7,12 +7,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject _Mote;
     [SerializeField] AudioClip _spawnSound;
     [SerializeField] AudioClip _deathSound;
+    [SerializeField] ParticleSystem _particles;
 
     bool _dropsMotes = false;
 
     void Awake()
     {
         AudioManager.Instance.PlaySound(_spawnSound);
+        _particles.Play();
     }
 
     public void Kill(bool shadow)
@@ -22,6 +24,9 @@ public class Enemy : MonoBehaviour
             DropMotes(shadow);
         }
         AudioManager.Instance.PlaySound(_deathSound);
+        ParticleSystem particles = Instantiate(_particles, transform);
+        particles.Play();
+        Destroy(particles, 2);
         Destroy(gameObject);
     }
 
