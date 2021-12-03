@@ -16,11 +16,12 @@ public class FireWeapon : MonoBehaviour
 
     // Class variables
     RaycastHit _hitInfo;        // raycast hit info to capture from raycasts
+    bool _disabled = false;
 
     void Update()
     {
         // Capture left mouse click to shoot raycast
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Mouse0) && !_disabled)
         {
             Shoot();
         }
@@ -30,7 +31,7 @@ public class FireWeapon : MonoBehaviour
     {
         float xMin = Screen.width / 2 - _crosshair.width / 2;
         float yMin = Screen.height / 2 - _crosshair.height / 2;
-        if(!LevelController.Instance._paused)
+        if(!LevelController.Instance._paused && !_disabled)
         {
             GUI.DrawTexture(new Rect(xMin, yMin, _crosshair.width,
                 _crosshair.height), _crosshair);
@@ -67,5 +68,10 @@ public class FireWeapon : MonoBehaviour
             LevelController.Instance._levelLight.transform.forward;
         return Physics.Raycast(_shadowCastSpawn.position, -lightDirection,
             _rayDistance, _geometryLayer);
+    }
+
+    public void SetDisabled(bool disable)
+    {
+        _disabled = disable;
     }
 }

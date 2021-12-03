@@ -44,15 +44,9 @@ public class MouseLook : MonoBehaviour
 
         // Rotate the player in the x direction
         _playerTransform.Rotate(Vector3.up * mouseX);
-
-
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            TogglePerspective();
-        }
     }
 
-    void TogglePerspective()
+    public void TogglePerspective()
     {
         if(_firstPerson)
         {

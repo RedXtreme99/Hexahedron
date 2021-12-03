@@ -10,12 +10,12 @@ public class Mote : MonoBehaviour
 
     // Class Variables
     MeshRenderer _renderer;
-    bool _dark = false;
+    public bool _dark = false;
 
     void Awake()
     {
         _renderer = GetComponent<MeshRenderer>();
-        SetDark(true);
+        SetDark(_dark);
     }
 
     void OnTriggerEnter(Collider other)
@@ -23,7 +23,11 @@ public class Mote : MonoBehaviour
         PlayerInventory inventory = other.GetComponent<PlayerInventory>();
         if(inventory != null)
         {
-            Destroy(gameObject);
+            if(!inventory._fullMotes)
+            {
+                inventory.AddMote(_dark);
+                Destroy(gameObject);
+            }
         }
     }
 
