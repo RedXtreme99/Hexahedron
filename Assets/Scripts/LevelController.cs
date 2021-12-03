@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour
 {
@@ -13,7 +14,10 @@ public class LevelController : MonoBehaviour
     [SerializeField] GameObject[] _faces;
     [SerializeField] GameObject _target;
     [SerializeField] Transform[] _targetPoints;
+    [SerializeField] Transform[] _tpPoints;
     [SerializeField] FlashImage _flashImage;
+    [SerializeField] GameObject _player;
+    [SerializeField] Text _winText;
 
     // Accessible level traits
     [HideInInspector]
@@ -27,6 +31,7 @@ public class LevelController : MonoBehaviour
     public Floor _currentFloor = Floor.Bottom;
     Rotation _nextRotation = Rotation.None;
     int _progress = 0;
+    bool _active;
 
     // Enums for game state and rotations
     public enum Floor { Bottom, Right, Front, Left, Back, Top };
@@ -56,6 +61,7 @@ public class LevelController : MonoBehaviour
         _paused = false;
         _target.transform.position = _targetPoints[(int)_currentFloor].position;
         _target.transform.rotation = _targetPoints[(int)_currentFloor].rotation;
+        ActivateFountains();
     }
 
     void Update()
@@ -129,7 +135,6 @@ public class LevelController : MonoBehaviour
     {
         _progress++;
         Debug.Log("Current progress: " + _progress.ToString());
-        ActivateFountains();
         if(_progress < 6)
         {
             int randInt = Random.Range(0, 5);
@@ -140,14 +145,25 @@ public class LevelController : MonoBehaviour
             _target.transform.position = _targetPoints[randInt].position;
             _target.transform.rotation = _targetPoints[randInt].rotation;
         }
+        else
+        {
+            _flashImage.StartFlash(2f, .8f, Color.green);
+            _winText.enabled = true;
+        }
     }
 
     void ActivateFountains()
     {
-        Fountain[] fountains = _faces[(int)_currentFloor].GetComponentsInChildren<Fountain>();
-        foreach(Fountain fountain in fountains)
+        if(!_active)
         {
-            fountain.SetActive(true);
+            Fountain[] fountains = _faces[(int)_currentFloor].GetComponentsInChildren<Fountain>();
+            foreach(Fountain fountain in fountains)
+            {
+                fountain.SetActive(true);
+            }
+            EnemySpawns spawns = _faces[(int)_currentFloor].GetComponentInChildren<EnemySpawns>();
+            spawns.SetActive(true);
+            _active = true;
         }
     }
 
@@ -158,6 +174,9 @@ public class LevelController : MonoBehaviour
         {
             fountain.SetActive(false);
         }
+        EnemySpawns spawns = _faces[(int)_currentFloor].GetComponentInChildren<EnemySpawns>();
+        spawns.SetActive(false);
+        _active = false;
     }
 
     public void SetRotation(Rotation rotation)
@@ -165,23 +184,19 @@ public class LevelController : MonoBehaviour
         DeactivateFountains();
         _nextRotation = rotation;
         _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(true);
-        Enemy[] enemies = FindObjectsOfType<Enemy>();
-        foreach(Enemy enemy in enemies)
-        {
-            enemy.KillNoMotes();
-        }
+        EnemySpawns spawns = _faces[(int)_currentFloor].GetComponentInChildren<EnemySpawns>();
+        spawns.SetActive(false);
     }
 
     public void StartRotation()
     {
         _transitioning = true;
         StartCoroutine(RotateRoom());
-        _transitioning = false;
     }
 
     IEnumerator RotateRoom()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         _flashImage.StartFlash(1, 1, Color.white);
         _faces[(int)_currentFloor].GetComponentInChildren<CenterPlate>().SetActive(false);
         Quaternion startingRotation = _cubeRoom.transform.rotation;
@@ -215,6 +230,11 @@ public class LevelController : MonoBehaviour
             _cubeRoom.transform.rotation = Quaternion.Slerp(startingRotation, Quaternion.Euler(targetRotation), elapsedTime);
             yield return new WaitForEndOfFrame();
         }
+        _transitioning = false;
+        _player.GetComponent<CharacterController>().enabled = false;
+        _player.transform.position = _tpPoints[(int)_currentFloor].position;
+        _player.GetComponent<CharacterController>().enabled = true;
+        ActivateFountains();
         yield return 0;
     }
 

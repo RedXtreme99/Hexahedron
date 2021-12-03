@@ -114,7 +114,10 @@ public class PlayerInventory : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _fountainLayer);
         foreach(Collider collider in colliders)
         {
-            collider.GetComponent<Fountain>().Cleanse(_shadow);
+            if(collider.GetComponent<MeshRenderer>().enabled)
+            {
+                collider.GetComponent<Fountain>().Cleanse(_shadow);
+            }
         }
         RemoveMotes();
     }

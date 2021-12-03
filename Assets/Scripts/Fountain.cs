@@ -38,17 +38,21 @@ public class Fountain : MonoBehaviour
             {
                 rotation = LevelController.Rotation.Forward;
             }
-            if(tag == "Left")
+            else if(tag == "Left")
             {
                 rotation = LevelController.Rotation.Counterclockwise;
             }
-            if(tag == "Right")
+            else if(tag == "Right")
             {
                 rotation = LevelController.Rotation.Clockwise;
             }
-            if(tag == "Back")
+            else if(tag == "Back")
             {
                 rotation = LevelController.Rotation.Backward;
+            }
+            else
+            {
+                Debug.Log("Rotation not set for: " + name);
             }
         }
         else
@@ -74,6 +78,7 @@ public class Fountain : MonoBehaviour
     {
         if(incomingShadow == _dark)
         {
+            Debug.Log(rotation.ToString());
             LevelController.Instance.SetRotation(rotation);
         }
     }

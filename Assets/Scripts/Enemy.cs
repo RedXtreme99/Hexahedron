@@ -8,11 +8,6 @@ public class Enemy : MonoBehaviour
 
     bool _dropsMotes = false;
 
-    private void Awake()
-    {
-        _dropsMotes = true;
-    }
-
     public void Kill(bool shadow)
     {
         if(_dropsMotes)
