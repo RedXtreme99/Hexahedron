@@ -11,6 +11,8 @@ public class LevelController : MonoBehaviour
     // Components
     [SerializeField] GameObject _cubeRoom;
     [SerializeField] GameObject[] _faces;
+    [SerializeField] GameObject _target;
+    [SerializeField] Transform[] _targetPoints;
 
     // Accessible level traits
     [HideInInspector]
@@ -19,7 +21,7 @@ public class LevelController : MonoBehaviour
     public bool _paused;
 
     // Class variables
-    Floor _currentFloor = Floor.Bottom;
+    public Floor _currentFloor = Floor.Bottom;
     Rotation _nextRotation = Rotation.None;
     int _progress = 0;
 
@@ -49,6 +51,8 @@ public class LevelController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         _paused = false;
+        _target.transform.position = _targetPoints[(int)_currentFloor].position;
+        _target.transform.rotation = _targetPoints[(int)_currentFloor].rotation;
     }
 
     void Update()
